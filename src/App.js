@@ -1,26 +1,46 @@
 import React from 'react';
-import logo from './logo.svg';
+import {BrowserRouter as Router, Route, Switch, Link, Redirect, useRouteMatch, useHistory, useParams} from "react-router-dom"
 import './App.css';
+import SearchReddit from "./SearchReddit";
+import Feed from "./Feed";
+
+function HomeButton() {
+  let history = useHistory();
+  function handleClick() {
+    history.push("/home");
+  }
+  return (
+      <button type="button" onClick={handleClick}>
+        Go home
+      </button>
+  );
+}
+const NotFound = () => {
+  return <div>Page not found</div>
+}
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+  <Router>
+    <div>
+<Link to="/">Home</Link>
+
+      <Switch>
+        <Route exact path="/">
+          <SearchReddit />
+        </Route>
+        <Route path='/r/:subreddit/comments/:id/:name'>
+          <Feed />
+        </Route>
+        <Redirect from="/home" to="/" />
+        <Route>
+          <NotFound />
+        </Route>
+      </Switch>
     </div>
+  </Router>
   );
 }
 
 export default App;
+
